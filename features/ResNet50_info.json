@@ -1,0 +1,31 @@
+{
+  "extractor": "ResNet50",
+  "num_images": 944,
+  "feature_dim": 2048,
+  "categories": {
+    "accordion": {
+      "train": 69,
+      "test": 90
+    },
+    "drum": {
+      "train": 77,
+      "test": 83
+    },
+    "flute": {
+      "train": 68,
+      "test": 81
+    },
+    "guitar": {
+      "train": 67,
+      "test": 91
+    },
+    "saxophone": {
+      "train": 71,
+      "test": 88
+    },
+    "violin": {
+      "train": 66,
+      "test": 93
+    }
+  }
+}

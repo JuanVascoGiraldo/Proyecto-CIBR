@@ -1,0 +1,31 @@
+{
+  "extractor": "ColorTexture",
+  "num_images": 960,
+  "feature_dim": 538,
+  "categories": {
+    "accordion": {
+      "train": 70,
+      "test": 90
+    },
+    "drum": {
+      "train": 77,
+      "test": 83
+    },
+    "flute": {
+      "train": 71,
+      "test": 89
+    },
+    "guitar": {
+      "train": 68,
+      "test": 92
+    },
+    "saxophone": {
+      "train": 71,
+      "test": 89
+    },
+    "violin": {
+      "train": 67,
+      "test": 93
+    }
+  }
+}

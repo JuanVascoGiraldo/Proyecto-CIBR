@@ -1,0 +1,42 @@
+{
+  "flat": {
+    "type": "IndexFlatL2",
+    "description": "B\u00fasqueda exacta con distancia L2",
+    "dimension": 8100,
+    "num_vectors": 960,
+    "build_time": 0.010166406631469727,
+    "uses": "Datasets peque\u00f1os, b\u00fasqueda exacta garantizada"
+  },
+  "ivf": {
+    "type": "IndexIVFFlat",
+    "description": "B\u00fasqueda aproximada con clustering",
+    "dimension": 8100,
+    "num_vectors": 960,
+    "nlist": 30,
+    "nprobe": 10,
+    "build_time": 0.1554248332977295,
+    "uses": "Datasets medianos/grandes, b\u00fasqueda r\u00e1pida"
+  },
+  "ivfpq": {
+    "type": "IndexIVFPQ",
+    "description": "B\u00fasqueda aproximada con compresi\u00f3n",
+    "dimension": 8100,
+    "num_vectors": 960,
+    "nlist": 30,
+    "nprobe": 10,
+    "m": 6,
+    "nbits": 8,
+    "build_time": 0.9313905239105225,
+    "compression_ratio": 5400.0,
+    "uses": "Datasets grandes, memoria limitada"
+  },
+  "hnsw": {
+    "type": "IndexHNSWFlat",
+    "description": "B\u00fasqueda aproximada con grafos",
+    "dimension": 8100,
+    "num_vectors": 960,
+    "M": 32,
+    "build_time": 0.7171328067779541,
+    "uses": "Alta precisi\u00f3n, b\u00fasqueda muy r\u00e1pida"
+  }
+}
