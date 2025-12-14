@@ -20,15 +20,13 @@ from feature_extractors import (
 )
 
 
-def get_all_images(base_path: str = "images", train_ratio: float = 0.8):
+def get_all_images(base_path: str = "images"):
     """
     Obtiene todas las imágenes del dataset.
-    Solo procesa imágenes de la carpeta 'train/' (150 por categoría).
-    Las divide en 80% entrenamiento (120) y 20% test (30).
+    Procesa imágenes de las carpetas 'train/' (150) y 'test/' (10) por categoría.
     
     Args:
         base_path: Ruta base del dataset
-        train_ratio: Proporción para entrenamiento (default: 0.8)
         
     Returns:
         list: Lista con información de las imágenes
@@ -39,34 +37,19 @@ def get_all_images(base_path: str = "images", train_ratio: float = 0.8):
     images_info = []
     
     for category in categories:
-        train_path = base_path / category / 'train'
+        category_path = base_path / category
         
-        if not train_path.exists():
-            print(f"⚠️  Advertencia: No se encuentra {train_path}")
-            continue
-        
-        # Obtener todas las imágenes de train/
-        category_images = []
-        for ext in ['*.jpg', '*.png', '*.jpeg']:
-            category_images.extend(list(train_path.glob(ext)))
-        
-        # Ordenar para consistencia
-        category_images.sort()
-        
-        # Calcular división 80/20
-        num_images = len(category_images)
-        num_train = int(num_images * train_ratio)
-        
-        # Asignar split
-        for idx, img_path in enumerate(category_images):
-            split = 'train' if idx < num_train else 'test'
-            
-            images_info.append({
-                'path': str(img_path),
-                'category': category,
-                'split': split,
-                'filename': img_path.name
-            })
+        # Procesar carpeta train/ (150 imágenes)
+        train_path = category_path / 'train'
+        if train_path.exists():
+            for ext in ['*.jpg', '*.png', '*.jpeg']:
+                for img_path in train_path.glob(ext):
+                    images_info.append({
+                        'path': str(img_path),
+                        'category': category,
+                        'split': 'train',
+                        'filename': img_path.name
+                    })
     
     return images_info
 
@@ -177,13 +160,12 @@ def main():
     print("EXTRACCIÓN DE CARACTERÍSTICAS DEL DATASET")
     print("="*60)
     print("\nConfiguración:")
-    print("  - Carpeta train/: 150 imágenes por categoría")
-    print("  - División: 80% train (120) / 20% test (30)")
-    print("  - Carpeta test/: 10 imágenes (ignoradas, para otras pruebas)")
+    print("  - Carpeta train/: 150 imágenes por categoría → split='train'")
+    print("  - Carpeta test/: 10 imágenes por categoría → split='test'")
     
     # Obtener todas las imágenes
     print("\nBuscando imágenes en el dataset...")
-    images_info = get_all_images(train_ratio=0.8)
+    images_info = get_all_images()
     
     if not images_info:
         print("\n✗ Error: No se encontraron imágenes.")

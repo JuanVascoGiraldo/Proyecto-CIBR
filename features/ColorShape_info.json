@@ -4,28 +4,28 @@
   "feature_dim": 103,
   "categories": {
     "accordion": {
-      "train": 120,
-      "test": 30
+      "train": 150,
+      "test": 0
     },
     "drum": {
-      "train": 120,
-      "test": 30
+      "train": 150,
+      "test": 0
     },
     "flute": {
-      "train": 120,
-      "test": 30
+      "train": 150,
+      "test": 0
     },
     "guitar": {
-      "train": 120,
-      "test": 30
+      "train": 150,
+      "test": 0
     },
     "saxophone": {
-      "train": 120,
-      "test": 30
+      "train": 150,
+      "test": 0
     },
     "violin": {
-      "train": 120,
-      "test": 30
+      "train": 150,
+      "test": 0
     }
   }
 }
