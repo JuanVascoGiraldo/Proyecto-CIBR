@@ -120,4 +120,4 @@ cd ..
 wait $BACKEND_PID $FRONTEND_PID
 
 echo ""
-echo "✓ Servidores detenidos"
+echo " Servidores detenidos"

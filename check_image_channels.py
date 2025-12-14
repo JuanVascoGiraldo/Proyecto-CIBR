@@ -111,7 +111,7 @@ def check_images(base_path="images"):
                     f.write(f"  {img['path']}\n")
                     f.write(f"    Tamaño: {img['size'][0]}x{img['size'][1]}\n\n")
         else:
-            f.write("\n✓ Todas las imágenes están en formato RGB estándar\n")
+            f.write("\n Todas las imágenes están en formato RGB estándar\n")
     
     # Resumen en consola
     print()
@@ -140,7 +140,7 @@ def check_images(base_path="images"):
             }
             print(f"  {mode:6s} ({desc.get(mode, mode):20s}): {count:3d} imágenes")
     
-    print(f"\n✓ Reporte guardado en: {output_file}")
+    print(f"\n Reporte guardado en: {output_file}")
     print()
 
 

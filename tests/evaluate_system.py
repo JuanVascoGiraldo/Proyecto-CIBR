@@ -226,7 +226,7 @@ class CBIRTester:
         print(f"\nImágenes de test encontradas: {len(test_images)}")
         
         if not test_images:
-            print("❌ No se encontraron imágenes de test")
+            print(" No se encontraron imágenes de test")
             return
         
         # Preparar almacenamiento de resultados
@@ -307,7 +307,7 @@ class CBIRTester:
                                 combo_confusion[true_class][error_class] += 1
                             
                         except Exception as e:
-                            print(f"\n❌ Error con {test_img['filename']} - {combination_name}: {e}")
+                            print(f"\n Error con {test_img['filename']} - {combination_name}: {e}")
                         
                         pbar.update(1)
                     
@@ -383,7 +383,7 @@ class CBIRTester:
             df_stats = pd.DataFrame([general_stats])
             df_stats.to_excel(writer, sheet_name='Estadisticas_Generales', index=False)
         
-        print(f"\n✓ Resultados guardados en: {output_path}")
+        print(f"\n Resultados guardados en: {output_path}")
         
         # Generar visualizaciones
         if not df_confusion.empty:
@@ -480,14 +480,14 @@ class CBIRTester:
         Args:
             df_summary: DataFrame con resumen
         """
-        print("\n📊 TOP 5 MEJORES COMBINACIONES:")
+        print("\n TOP 5 MEJORES COMBINACIONES:")
         print("-" * 70)
         for i, row in df_summary.head(5).iterrows():
             print(f"{row['extractor']:15s} + {row['index_type']:6s} | "
                   f"Precisión: {row['avg_precision']:.2%} | "
                   f"Similitud: {row['avg_similarity']:.4f}")
         
-        print(f"\n📊 TOP 5 PEORES COMBINACIONES:")
+        print(f"\n TOP 5 PEORES COMBINACIONES:")
         print("-" * 70)
         for i, row in df_summary.tail(5).iterrows():
             print(f"{row['extractor']:15s} + {row['index_type']:6s} | "
@@ -561,7 +561,7 @@ class CBIRTester:
             plt.savefig(output_path / filename, dpi=300, bbox_inches='tight')
             plt.close()
         
-        print(f"✓ Matrices guardadas en: {output_path}")
+        print(f" Matrices guardadas en: {output_path}")
     
     def generate_statistics_graphs(self, df_summary, df_detailed, df_errors, output_dir='tests/graphics'):
         """
@@ -729,7 +729,7 @@ class CBIRTester:
         plt.savefig(output_path / 'precision_distribution_boxplot.png', dpi=300, bbox_inches='tight')
         plt.close()
         
-        print(f"✓ Gráficos guardados en: {output_path}")
+        print(f" Gráficos guardados en: {output_path}")
 
 
 def main():
