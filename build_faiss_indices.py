@@ -259,11 +259,11 @@ def build_all_indices_for_extractor(extractor_name: str,
     ids_file = Path(features_dir) / f"{extractor_name}_ids.npy"
     
     if not features_file.exists():
-        print(f"✗ Error: No se encontró {features_file}")
+        print(f" Error: No se encontró {features_file}")
         return
     
     if not ids_file.exists():
-        print(f"✗ Error: No se encontró {ids_file}")
+        print(f" Error: No se encontró {ids_file}")
         return
     
     print(f"\nCargando características desde {features_file}...")
@@ -291,28 +291,28 @@ def build_all_indices_for_extractor(extractor_name: str,
     index_file = output_path / "index_flat.index"
     faiss.write_index(index, str(index_file))
     indices_info['flat'] = metadata
-    print(f"    💾 Guardado: {index_file}")
+    print(f"Guardado: {index_file}")
     
     # 2. IVF Index
     index, metadata = builder.build_ivf_index()
     index_file = output_path / "index_ivf.index"
     faiss.write_index(index, str(index_file))
     indices_info['ivf'] = metadata
-    print(f"    💾 Guardado: {index_file}")
+    print(f"Guardado: {index_file}")
     
     # 3. IVFPQ Index
     index, metadata = builder.build_ivfpq_index()
     index_file = output_path / "index_ivfpq.index"
     faiss.write_index(index, str(index_file))
     indices_info['ivfpq'] = metadata
-    print(f"    💾 Guardado: {index_file}")
+    print(f"Guardado: {index_file}")
     
     # 4. HNSW Index
     index, metadata = builder.build_hnsw_index()
     index_file = output_path / "index_hnsw.index"
     faiss.write_index(index, str(index_file))
     indices_info['hnsw'] = metadata
-    print(f"    💾 Guardado: {index_file}")
+    print(f"Guardado: {index_file}")
     
     # Guardar metadata de todos los índices
     metadata_file = output_path / "indices_info.json"
@@ -339,7 +339,7 @@ def main():
     # Verificar directorio de características
     features_dir = Path("features")
     if not features_dir.exists():
-        print("\n✗ Error: Directorio 'features/' no encontrado")
+        print("\n Error: Directorio 'features/' no encontrado")
         print("  Ejecuta extract_all_features.py primero")
         return
     
@@ -347,7 +347,7 @@ def main():
     feature_files = list(features_dir.glob("*_features.npy"))
     
     if not feature_files:
-        print("\n✗ Error: No se encontraron archivos de características")
+        print("\n Error: No se encontraron archivos de características")
         print("  Ejecuta extract_all_features.py primero")
         return
     

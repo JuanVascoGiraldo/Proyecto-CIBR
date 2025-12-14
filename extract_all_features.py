@@ -194,7 +194,7 @@ def main():
     images_info = get_all_images()
     
     if not images_info:
-        print("\n✗ Error: No se encontraron imágenes.")
+        print("\n Error: No se encontraron imágenes.")
         print("  Por favor, ejecuta preprocess_images.py primero.")
         return
     
