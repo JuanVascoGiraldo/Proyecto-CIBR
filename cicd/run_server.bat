@@ -88,7 +88,8 @@ echo  Iniciando servidor backend...
 start "Backend API" cmd /k "cd /d "%CD%" && call .venv\Scripts\activate.bat && uvicorn api:app --host %HOST% --port %PORT% --reload"
 
 REM Esperar un momento para que el backend inicie
-timeout /t 3 /nobreak >nul
+echo Esperando a que el backend inicie...
+timeout /t 7 /nobreak >nul
 
 REM Iniciar frontend y abrir navegador
 echo  Iniciando servidor frontend...
