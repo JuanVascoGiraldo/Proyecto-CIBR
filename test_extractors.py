@@ -66,7 +66,7 @@ def main():
     print("="*60)
     
     # Usar imagen específica
-    test_image = "images/accordion/0001.jpg"
+    test_image = "images/accordion/train/0001.jpg"
     
     if not Path(test_image).exists():
         print(f"\n✗ Error: No se encontró la imagen {test_image}")
@@ -103,16 +103,7 @@ def main():
         print("\nComparación de dimensiones:")
         for name, data in results.items():
             print(f"  {name:20s}: {data['dim']:5d} dimensiones")
-        
-        print("\nRecomendaciones:")
-        print("  - ResNet50 y VGG16: Mejores para similitud semántica")
-        print("  - ColorTexture: Rápido, bueno para patrones visuales")
-        print("  - HOG: Excelente para formas y bordes")
-        print("  - ColorShape: Combina color global con forma")
-        
-        print("\n Todos los extractores están listos para usar")
-        print("  Puedes importarlos con:")
-        print("  from feature_extractors import ResNetExtractor, VGGExtractor, ...")
+
 
 
 if __name__ == "__main__":
