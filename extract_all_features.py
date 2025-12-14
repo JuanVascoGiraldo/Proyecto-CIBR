@@ -18,6 +18,7 @@ from feature_extractors import (
     HOGExtractor,
     ColorShapeExtractor
 )
+from get_id import get_image_id, get_batch_ids
 
 
 def get_all_images(base_path: str = "images"):
@@ -98,7 +99,7 @@ def extract_features_for_all(images_info: list, extractor, extractor_name: str):
 def save_features(features_matrix, paths_list, metadata_list, extractor_name: str, 
                   output_dir: str = "features"):
     """
-    Guarda las características extraídas.
+    Guarda las características extraídas con IDs únicos.
     
     Args:
         features_matrix: Matriz de características
@@ -110,17 +111,40 @@ def save_features(features_matrix, paths_list, metadata_list, extractor_name: st
     output_dir = Path(output_dir)
     output_dir.mkdir(exist_ok=True)
     
+    # Generar IDs únicos para cada imagen
+    image_ids = get_batch_ids(paths_list)
+    
     # Guardar matriz de características
     features_file = output_dir / f"{extractor_name}_features.npy"
     np.save(features_file, features_matrix)
     
-    # Guardar metadata
+    # Guardar IDs (mismo orden que features)
+    ids_file = output_dir / f"{extractor_name}_ids.npy"
+    np.save(ids_file, np.array(image_ids, dtype=np.int64))
+    
+    # Crear mapping ID → metadata (diccionario para acceso directo)
+    id_to_metadata = {}
+    for img_id, path, meta in zip(image_ids, paths_list, metadata_list):
+        id_to_metadata[img_id] = {
+            'path': path,
+            'category': meta['category'],
+            'split': meta['split'],
+            'filename': meta['filename']
+        }
+    
+    # Guardar mapping ID → metadata
+    id_mapping_file = output_dir / f"{extractor_name}_id_mapping.pkl"
+    with open(id_mapping_file, 'wb') as f:
+        pickle.dump(id_to_metadata, f)
+    
+    # Guardar metadata (mantener compatibilidad con código anterior)
     metadata = {
         'extractor': extractor_name,
         'num_images': len(paths_list),
         'feature_dim': features_matrix.shape[1],
         'paths': paths_list,
-        'metadata': metadata_list
+        'metadata': metadata_list,
+        'ids': image_ids
     }
     
     metadata_file = output_dir / f"{extractor_name}_metadata.pkl"
@@ -148,6 +172,8 @@ def save_features(features_matrix, paths_list, metadata_list, extractor_name: st
     
     print(f"   Guardado en {output_dir}/")
     print(f"    - Features: {features_file.name}")
+    print(f"    - IDs: {ids_file.name}")
+    print(f"    - ID Mapping: {id_mapping_file.name}")
     print(f"    - Metadata: {metadata_file.name}")
     print(f"    - Info: {json_file.name}")
 

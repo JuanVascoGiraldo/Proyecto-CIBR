@@ -57,27 +57,30 @@ EXTRACTORS = {
 # Diccionario de índices disponibles
 INDEX_TYPES = ['flat', 'ivf', 'ivfpq', 'hnsw']
 
-# Cache de índices y metadata
+# Cache de índices, metadata e ID mappings
 indices_cache = {}
 metadata_cache = {}
+id_mapping_cache = {}
 
 
 def load_index(extractor_name: str, index_type: str):
     """
-    Carga un índice FAISS y su metadata.
+    Carga un índice FAISS, su metadata y el mapping de IDs.
     
     Args:
         extractor_name: Nombre del extractor
         index_type: Tipo de índice (flat, ivf, ivfpq, hnsw)
         
     Returns:
-        tuple: (index, metadata)
+        tuple: (index, metadata, id_mapping)
     """
     cache_key = f"{extractor_name}_{index_type}"
     
     # Verificar si ya está en cache
     if cache_key in indices_cache:
-        return indices_cache[cache_key], metadata_cache[cache_key]
+        return (indices_cache[cache_key], 
+                metadata_cache[cache_key],
+                id_mapping_cache[cache_key])
     
     # Cargar índice
     index_path = Path(f"faiss_indices/{extractor_name}/index_{index_type}.index")
@@ -86,7 +89,7 @@ def load_index(extractor_name: str, index_type: str):
     
     index = faiss.read_index(str(index_path))
     
-    # Cargar metadata
+    # Cargar metadata (mantener para compatibilidad)
     metadata_path = Path(f"features/{extractor_name}_metadata.pkl")
     if not metadata_path.exists():
         raise ValueError(f"Metadata no encontrada: {metadata_path}")
@@ -94,11 +97,20 @@ def load_index(extractor_name: str, index_type: str):
     with open(metadata_path, 'rb') as f:
         metadata = pickle.load(f)
     
+    # Cargar ID mapping (diccionario ID → info)
+    id_mapping_path = Path(f"features/{extractor_name}_id_mapping.pkl")
+    if not id_mapping_path.exists():
+        raise ValueError(f"ID mapping no encontrado: {id_mapping_path}")
+    
+    with open(id_mapping_path, 'rb') as f:
+        id_mapping = pickle.load(f)
+    
     # Guardar en cache
     indices_cache[cache_key] = index
     metadata_cache[cache_key] = metadata
+    id_mapping_cache[cache_key] = id_mapping
     
-    return index, metadata
+    return index, metadata, id_mapping
 
 
 @app.get("/")
@@ -226,32 +238,33 @@ async def search_similar_images(
         extractor_obj = EXTRACTORS[extractor]
         query_features = extractor_obj.extract(np.array(image))
         
-        # Cargar índice y metadata
-        index, metadata = load_index(extractor, index_type)
+        # Cargar índice, metadata e ID mapping
+        index, metadata, id_mapping = load_index(extractor, index_type)
         
         # Ajustar k si es mayor que el número de vectores en el índice
         k = min(k, index.ntotal)
         
         # Buscar en el índice
         query_vector = query_features.reshape(1, -1).astype(np.float32)
-        distances, indices = index.search(query_vector, k)
+        distances, ids = index.search(query_vector, k)
         
-        # Preparar resultados
+        # Preparar resultados usando ID mapping
         results = []
-        for i, (dist, idx) in enumerate(zip(distances[0], indices[0])):
-            img_path = metadata['paths'][idx]
-            img_metadata = metadata['metadata'][idx]
+        for i, (dist, img_id) in enumerate(zip(distances[0], ids[0])):
+            # Recuperar info usando el ID
+            img_info = id_mapping[img_id]
             
             # Convertir path absoluto a relativo
-            rel_path = os.path.relpath(img_path)
+            rel_path = os.path.relpath(img_info['path'])
             
             results.append({
                 "rank": i + 1,
+                "image_id": int(img_id),
                 "image_path": rel_path,
                 "distance": float(dist),
-                "category": img_metadata['category'],
-                "split": img_metadata['split'],
-                "filename": img_metadata['filename']
+                "category": img_info['category'],
+                "split": img_info['split'],
+                "filename": img_info['filename']
             })
         
         return {

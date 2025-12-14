@@ -16,25 +16,29 @@ import time
 class FAISSIndexBuilder:
     """
     Constructor de índices FAISS con diferentes métodos de indexación.
+    Usa IndexIDMap para asignar IDs personalizados.
     """
     
-    def __init__(self, features: np.ndarray, dimension: int):
+    def __init__(self, features: np.ndarray, ids: np.ndarray, dimension: int):
         """
         Inicializa el constructor.
         
         Args:
             features: Matriz de características (N x D)
+            ids: Array de IDs personalizados para cada vector
             dimension: Dimensión de los vectores
         """
         self.features = features.astype(np.float32)
+        self.ids = ids.astype(np.int64)
         self.dimension = dimension
         self.num_vectors = features.shape[0]
         
         print(f"  Dataset: {self.num_vectors} vectores de dimensión {self.dimension}")
+        print(f"  Usando IDs personalizados (rango: {self.ids.min()} - {self.ids.max()})")
     
     def build_flat_index(self) -> Tuple[faiss.Index, dict]:
         """
-        Construye un índice Flat (búsqueda exacta con L2).
+        Construye un índice Flat (búsqueda exacta con L2) con IDs personalizados.
         
         Returns:
             tuple: (índice, metadata)
@@ -42,11 +46,14 @@ class FAISSIndexBuilder:
         print("\n  [1/4] Construyendo IndexFlatL2 (búsqueda exacta)...")
         start_time = time.time()
         
-        # Crear índice
-        index = faiss.IndexFlatL2(self.dimension)
+        # Crear índice base
+        base_index = faiss.IndexFlatL2(self.dimension)
         
-        # Agregar vectores
-        index.add(self.features)
+        # Envolver con IndexIDMap para IDs personalizados
+        index = faiss.IndexIDMap(base_index)
+        
+        # Agregar vectores con IDs específicos
+        index.add_with_ids(self.features, self.ids)
         
         build_time = time.time() - start_time
         
@@ -66,7 +73,7 @@ class FAISSIndexBuilder:
     
     def build_ivf_index(self, nlist: int = None) -> Tuple[faiss.Index, dict]:
         """
-        Construye un índice IVF (Inverted File).
+        Construye un índice IVF (Inverted File) con IDs personalizados.
         
         Args:
             nlist: Número de clusters (por defecto: sqrt(N))
@@ -84,18 +91,21 @@ class FAISSIndexBuilder:
         quantizer = faiss.IndexFlatL2(self.dimension)
         
         # Crear índice IVF
-        index = faiss.IndexIVFFlat(quantizer, self.dimension, nlist)
+        base_index = faiss.IndexIVFFlat(quantizer, self.dimension, nlist)
+        
+        # Envolver con IndexIDMap
+        index = faiss.IndexIDMap(base_index)
         
         # Entrenar el índice
         print(f"    - Entrenando con {self.num_vectors} vectores...")
-        index.train(self.features)
+        base_index.train(self.features)
         
-        # Agregar vectores
+        # Agregar vectores con IDs
         print(f"    - Agregando vectores al índice...")
-        index.add(self.features)
+        index.add_with_ids(self.features, self.ids)
         
         # Configurar nprobe (número de clusters a buscar)
-        index.nprobe = min(10, nlist)
+        base_index.nprobe = min(10, nlist)
         
         build_time = time.time() - start_time
         
@@ -105,14 +115,14 @@ class FAISSIndexBuilder:
             'dimension': self.dimension,
             'num_vectors': index.ntotal,
             'nlist': nlist,
-            'nprobe': index.nprobe,
+            'nprobe': base_index.nprobe,
             'build_time': build_time,
             'uses': 'Datasets medianos/grandes, búsqueda rápida'
         }
         
         print(f"     Completado en {build_time:.2f}s")
         print(f"     Vectores indexados: {index.ntotal}")
-        print(f"     Clusters: {nlist}, nprobe: {index.nprobe}")
+        print(f"     Clusters: {nlist}, nprobe: {base_index.nprobe}")
         
         return index, metadata
     
@@ -145,18 +155,21 @@ class FAISSIndexBuilder:
         quantizer = faiss.IndexFlatL2(self.dimension)
         
         # Crear índice IVFPQ
-        index = faiss.IndexIVFPQ(quantizer, self.dimension, nlist, m, nbits)
+        base_index = faiss.IndexIVFPQ(quantizer, self.dimension, nlist, m, nbits)
+        
+        # Envolver con IndexIDMap
+        index = faiss.IndexIDMap(base_index)
         
         # Entrenar
         print(f"    - Entrenando con {self.num_vectors} vectores...")
-        index.train(self.features)
+        base_index.train(self.features)
         
-        # Agregar vectores
+        # Agregar vectores con IDs
         print(f"    - Agregando vectores al índice...")
-        index.add(self.features)
+        index.add_with_ids(self.features, self.ids)
         
         # Configurar nprobe
-        index.nprobe = min(10, nlist)
+        base_index.nprobe = min(10, nlist)
         
         build_time = time.time() - start_time
         
@@ -171,7 +184,7 @@ class FAISSIndexBuilder:
             'dimension': self.dimension,
             'num_vectors': index.ntotal,
             'nlist': nlist,
-            'nprobe': index.nprobe,
+            'nprobe': base_index.nprobe,
             'm': m,
             'nbits': nbits,
             'build_time': build_time,
@@ -187,7 +200,7 @@ class FAISSIndexBuilder:
     
     def build_hnsw_index(self, M: int = 32) -> Tuple[faiss.Index, dict]:
         """
-        Construye un índice HNSW (Hierarchical Navigable Small World).
+        Construye un índice HNSW (Hierarchical Navigable Small World) con IDs personalizados.
         
         Args:
             M: Número de conexiones por nodo
@@ -198,12 +211,15 @@ class FAISSIndexBuilder:
         print(f"\n  [4/4] Construyendo IndexHNSWFlat (M={M})...")
         start_time = time.time()
         
-        # Crear índice HNSW
-        index = faiss.IndexHNSWFlat(self.dimension, M)
+        # Crear índice HNSW base
+        base_index = faiss.IndexHNSWFlat(self.dimension, M)
         
-        # Agregar vectores (HNSW no requiere entrenamiento)
+        # Envolver con IndexIDMap
+        index = faiss.IndexIDMap(base_index)
+        
+        # Agregar vectores con IDs (HNSW no requiere entrenamiento)
         print(f"    - Agregando vectores al índice...")
-        index.add(self.features)
+        index.add_with_ids(self.features, self.ids)
         
         build_time = time.time() - start_time
         
@@ -240,19 +256,28 @@ def build_all_indices_for_extractor(extractor_name: str,
     
     # Cargar características
     features_file = Path(features_dir) / f"{extractor_name}_features.npy"
+    ids_file = Path(features_dir) / f"{extractor_name}_ids.npy"
     
     if not features_file.exists():
         print(f"✗ Error: No se encontró {features_file}")
         return
     
+    if not ids_file.exists():
+        print(f"✗ Error: No se encontró {ids_file}")
+        return
+    
     print(f"\nCargando características desde {features_file}...")
     features = np.load(features_file)
     
+    print(f"Cargando IDs desde {ids_file}...")
+    ids = np.load(ids_file)
+    
     print(f"   Cargadas {features.shape[0]} características")
     print(f"   Dimensión: {features.shape[1]}")
+    print(f"   IDs: {len(ids)} (rango: {ids.min()} - {ids.max()})")
     
     # Crear constructor
-    builder = FAISSIndexBuilder(features, features.shape[1])
+    builder = FAISSIndexBuilder(features, ids, features.shape[1])
     
     # Crear directorio de salida
     output_path = Path(output_dir) / extractor_name

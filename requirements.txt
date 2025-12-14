@@ -19,6 +19,8 @@ faiss-cpu>=1.7.4  # Usar faiss-gpu si tienes GPU con CUDA
 # Utilidades
 tqdm>=4.66.0
 matplotlib>=3.7.0
+pandas>=2.0.0
+openpyxl>=3.1.0
 
 # Opcional: para visualización avanzada
 seaborn>=0.12.0

@@ -4,7 +4,7 @@
     "description": "B\u00fasqueda exacta con distancia L2",
     "dimension": 2048,
     "num_vectors": 900,
-    "build_time": 0.0025162696838378906,
+    "build_time": 0.0040740966796875,
     "uses": "Datasets peque\u00f1os, b\u00fasqueda exacta garantizada"
   },
   "ivf": {
@@ -14,7 +14,7 @@
     "num_vectors": 900,
     "nlist": 30,
     "nprobe": 10,
-    "build_time": 0.023035764694213867,
+    "build_time": 0.022189855575561523,
     "uses": "Datasets medianos/grandes, b\u00fasqueda r\u00e1pida"
   },
   "ivfpq": {
@@ -26,7 +26,7 @@
     "nprobe": 10,
     "m": 8,
     "nbits": 8,
-    "build_time": 0.2794382572174072,
+    "build_time": 0.29236340522766113,
     "compression_ratio": 1024.0,
     "uses": "Datasets grandes, memoria limitada"
   },
@@ -36,7 +36,7 @@
     "dimension": 2048,
     "num_vectors": 900,
     "M": 32,
-    "build_time": 0.05726456642150879,
+    "build_time": 0.02319502830505371,
     "uses": "Alta precisi\u00f3n, b\u00fasqueda muy r\u00e1pida"
   }
 }
