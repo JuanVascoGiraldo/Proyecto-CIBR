@@ -19,7 +19,7 @@ def test_health():
     response = requests.get(f"{API_URL}/health")
     if response.status_code == 200:
         data = response.json()
-        print("✓ API funcionando correctamente")
+        print(" API funcionando correctamente")
         print(f"  Estado: {data['status']}")
         print(f"  Extractores cargados: {data['extractors_loaded']}")
         print(f"  Índices en cache: {data['indices_cached']}")
@@ -114,7 +114,7 @@ def search_similar_images(image_path: str, extractor: str = "ResNet50",
     if response.status_code == 200:
         data = response.json()
         
-        print("✓ Búsqueda exitosa\n")
+        print(" Búsqueda exitosa\n")
         print(f"Extractor usado: {data['extractor']}")
         print(f"Dimensión de características: {data['feature_dimension']}")
         print(f"Resultados encontrados: {len(data['results'])}\n")
@@ -196,7 +196,7 @@ def main():
     get_statistics()
     
     print("\n" + "="*60)
-    print("✓ PRUEBAS COMPLETADAS")
+    print(" PRUEBAS COMPLETADAS")
     print("="*60)
     print("\nPara más pruebas:")
     print("  - Visita http://localhost:8000/docs para la documentación interactiva")

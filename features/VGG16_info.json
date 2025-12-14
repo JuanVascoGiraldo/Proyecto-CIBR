@@ -1,31 +1,31 @@
 {
   "extractor": "VGG16",
-  "num_images": 944,
+  "num_images": 900,
   "feature_dim": 512,
   "categories": {
     "accordion": {
-      "train": 69,
-      "test": 90
+      "train": 120,
+      "test": 30
     },
     "drum": {
-      "train": 77,
-      "test": 83
+      "train": 120,
+      "test": 30
     },
     "flute": {
-      "train": 68,
-      "test": 81
+      "train": 120,
+      "test": 30
     },
     "guitar": {
-      "train": 67,
-      "test": 91
+      "train": 120,
+      "test": 30
     },
     "saxophone": {
-      "train": 71,
-      "test": 88
+      "train": 120,
+      "test": 30
     },
     "violin": {
-      "train": 66,
-      "test": 93
+      "train": 120,
+      "test": 30
     }
   }
 }

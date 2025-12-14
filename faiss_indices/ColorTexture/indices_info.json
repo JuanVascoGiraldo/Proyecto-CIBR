@@ -3,30 +3,30 @@
     "type": "IndexFlatL2",
     "description": "B\u00fasqueda exacta con distancia L2",
     "dimension": 538,
-    "num_vectors": 960,
-    "build_time": 0.0,
+    "num_vectors": 900,
+    "build_time": 0.002002239227294922,
     "uses": "Datasets peque\u00f1os, b\u00fasqueda exacta garantizada"
   },
   "ivf": {
     "type": "IndexIVFFlat",
     "description": "B\u00fasqueda aproximada con clustering",
     "dimension": 538,
-    "num_vectors": 960,
+    "num_vectors": 900,
     "nlist": 30,
     "nprobe": 10,
-    "build_time": 0.009020090103149414,
+    "build_time": 0.008654117584228516,
     "uses": "Datasets medianos/grandes, b\u00fasqueda r\u00e1pida"
   },
   "ivfpq": {
     "type": "IndexIVFPQ",
     "description": "B\u00fasqueda aproximada con compresi\u00f3n",
     "dimension": 538,
-    "num_vectors": 960,
+    "num_vectors": 900,
     "nlist": 30,
     "nprobe": 10,
     "m": 2,
     "nbits": 8,
-    "build_time": 0.08116674423217773,
+    "build_time": 0.06885457038879395,
     "compression_ratio": 1076.0,
     "uses": "Datasets grandes, memoria limitada"
   },
@@ -34,9 +34,9 @@
     "type": "IndexHNSWFlat",
     "description": "B\u00fasqueda aproximada con grafos",
     "dimension": 538,
-    "num_vectors": 960,
+    "num_vectors": 900,
     "M": 32,
-    "build_time": 0.008539438247680664,
+    "build_time": 0.008000850677490234,
     "uses": "Alta precisi\u00f3n, b\u00fasqueda muy r\u00e1pida"
   }
 }

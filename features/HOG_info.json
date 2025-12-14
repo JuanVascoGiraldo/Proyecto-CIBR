@@ -1,31 +1,31 @@
 {
   "extractor": "HOG",
-  "num_images": 960,
+  "num_images": 900,
   "feature_dim": 8100,
   "categories": {
     "accordion": {
-      "train": 70,
-      "test": 90
+      "train": 120,
+      "test": 30
     },
     "drum": {
-      "train": 77,
-      "test": 83
+      "train": 120,
+      "test": 30
     },
     "flute": {
-      "train": 71,
-      "test": 89
+      "train": 120,
+      "test": 30
     },
     "guitar": {
-      "train": 68,
-      "test": 92
+      "train": 120,
+      "test": 30
     },
     "saxophone": {
-      "train": 71,
-      "test": 89
+      "train": 120,
+      "test": 30
     },
     "violin": {
-      "train": 67,
-      "test": 93
+      "train": 120,
+      "test": 30
     }
   }
 }

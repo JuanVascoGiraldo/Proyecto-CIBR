@@ -1,13 +1,25 @@
+import { useState } from 'react'
 import './SearchResults.css'
 
 function SearchResults({ results, apiUrl }) {
+  const [selectedImage, setSelectedImage] = useState(null)
+
   if (!results || !results.results) return null
 
   const getImageUrl = (imagePath) => {
     // Convertir path de Windows a URL relativa del frontend
-    const normalizedPath = imagePath.replace(/\\/g, '/')
+    // remplazar la /train por ""
+    const normalizedPath = imagePath.replace(/\\/g, '/').replace(/train\//, '')
     // Servir desde el public del frontend
     return `/${normalizedPath}`
+  }
+
+  const handleImageClick = (result) => {
+    setSelectedImage(result)
+  }
+
+  const closeModal = () => {
+    setSelectedImage(null)
   }
 
   return (
@@ -35,7 +47,7 @@ function SearchResults({ results, apiUrl }) {
           <div key={result.rank} className="result-card">
             <div className="result-rank">#{result.rank}</div>
             
-            <div className="result-image-container">
+            <div className="result-image-container" onClick={() => handleImageClick(result)}>
               <img
                 src={getImageUrl(result.image_path)}
                 alt={result.filename}
@@ -87,6 +99,27 @@ function SearchResults({ results, apiUrl }) {
           </div>
         ))}
       </div>
+
+      {/* Modal para mostrar imagen en grande */}
+      {selectedImage && (
+        <div className="image-modal" onClick={closeModal}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <button className="modal-close" onClick={closeModal}>✕</button>
+            <img
+              src={getImageUrl(selectedImage.image_path)}
+              alt={selectedImage.filename}
+              className="modal-image"
+            />
+            <div className="modal-info">
+              <h3>{selectedImage.filename}</h3>
+              <p><strong>Categoría:</strong> {selectedImage.category}</p>
+              <p><strong>Conjunto:</strong> {selectedImage.split}</p>
+              <p><strong>Distancia:</strong> {selectedImage.distance.toFixed(4)}</p>
+              <p><strong>Similitud:</strong> {Math.max(0, 100 - selectedImage.distance * 100).toFixed(1)}%</p>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

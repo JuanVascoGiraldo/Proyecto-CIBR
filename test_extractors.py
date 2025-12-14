@@ -40,7 +40,7 @@ def test_extractor(extractor, image_path: str):
         elapsed_time = time.time() - start_time
         
         # Mostrar resultados
-        print(f"✓ Extracción exitosa")
+        print(f" Extracción exitosa")
         print(f"  - Dimensión del vector: {len(features)}")
         print(f"  - Dimensión esperada: {extractor.get_feature_dim()}")
         print(f"  - Tiempo de extracción: {elapsed_time:.4f} segundos")
@@ -110,7 +110,7 @@ def main():
         print("  - HOG: Excelente para formas y bordes")
         print("  - ColorShape: Combina color global con forma")
         
-        print("\n✓ Todos los extractores están listos para usar")
+        print("\n Todos los extractores están listos para usar")
         print("  Puedes importarlos con:")
         print("  from feature_extractors import ResNetExtractor, VGGExtractor, ...")
 

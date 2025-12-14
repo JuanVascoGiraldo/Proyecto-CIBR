@@ -152,7 +152,7 @@ function ImageSearch({ extractors, indices, onSearch, loading }) {
           className="search-btn"
           disabled={!selectedFile || loading}
         >
-          {loading ? 'Buscando...' : '🔍 Buscar Imágenes Similares'}
+          {loading ? 'Buscando...' : ' Buscar Imágenes Similares'}
         </button>
       </form>
     </div>

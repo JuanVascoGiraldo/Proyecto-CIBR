@@ -20,12 +20,15 @@ from feature_extractors import (
 )
 
 
-def get_all_images(base_path: str = "images"):
+def get_all_images(base_path: str = "images", train_ratio: float = 0.8):
     """
     Obtiene todas las imágenes del dataset.
+    Solo procesa imágenes de la carpeta 'train/' (150 por categoría).
+    Las divide en 80% entrenamiento (120) y 20% test (30).
     
     Args:
         base_path: Ruta base del dataset
+        train_ratio: Proporción para entrenamiento (default: 0.8)
         
     Returns:
         list: Lista con información de las imágenes
@@ -36,25 +39,34 @@ def get_all_images(base_path: str = "images"):
     images_info = []
     
     for category in categories:
-        category_path = base_path / category
+        train_path = base_path / category / 'train'
         
-        if not category_path.exists():
+        if not train_path.exists():
+            print(f"⚠️  Advertencia: No se encuentra {train_path}")
             continue
         
-        # Buscar todas las imágenes
+        # Obtener todas las imágenes de train/
+        category_images = []
         for ext in ['*.jpg', '*.png', '*.jpeg']:
-            for img_path in category_path.glob(ext):
-                # Determinar split basado en el nombre del archivo
-                # Asumimos que las primeras 80 son train y las últimas son test
-                img_num = int(''.join(filter(str.isdigit, img_path.stem)))
-                split = 'train' if img_num <= 80 else 'test'
-                
-                images_info.append({
-                    'path': str(img_path),
-                    'category': category,
-                    'split': split,
-                    'filename': img_path.name
-                })
+            category_images.extend(list(train_path.glob(ext)))
+        
+        # Ordenar para consistencia
+        category_images.sort()
+        
+        # Calcular división 80/20
+        num_images = len(category_images)
+        num_train = int(num_images * train_ratio)
+        
+        # Asignar split
+        for idx, img_path in enumerate(category_images):
+            split = 'train' if idx < num_train else 'test'
+            
+            images_info.append({
+                'path': str(img_path),
+                'category': category,
+                'split': split,
+                'filename': img_path.name
+            })
     
     return images_info
 
@@ -151,7 +163,7 @@ def save_features(features_matrix, paths_list, metadata_list, extractor_name: st
     with open(json_file, 'w') as f:
         json.dump(metadata_json, f, indent=2)
     
-    print(f"  ✓ Guardado en {output_dir}/")
+    print(f"   Guardado en {output_dir}/")
     print(f"    - Features: {features_file.name}")
     print(f"    - Metadata: {metadata_file.name}")
     print(f"    - Info: {json_file.name}")
@@ -164,17 +176,21 @@ def main():
     print("="*60)
     print("EXTRACCIÓN DE CARACTERÍSTICAS DEL DATASET")
     print("="*60)
+    print("\nConfiguración:")
+    print("  - Carpeta train/: 150 imágenes por categoría")
+    print("  - División: 80% train (120) / 20% test (30)")
+    print("  - Carpeta test/: 10 imágenes (ignoradas, para otras pruebas)")
     
     # Obtener todas las imágenes
     print("\nBuscando imágenes en el dataset...")
-    images_info = get_all_images()
+    images_info = get_all_images(train_ratio=0.8)
     
     if not images_info:
         print("\n✗ Error: No se encontraron imágenes.")
         print("  Por favor, ejecuta preprocess_images.py primero.")
         return
     
-    print(f"✓ Encontradas {len(images_info)} imágenes")
+    print(f" Encontradas {len(images_info)} imágenes")
     
     # Contar por categoría y split
     categories = {}
@@ -220,10 +236,9 @@ def main():
         save_features(features_matrix, paths_list, metadata_list, extractor_name)
     
     print(f"\n{'='*60}")
-    print("✓ EXTRACCIÓN COMPLETADA")
+    print("EXTRACCIÓN COMPLETADA")
     print(f"{'='*60}")
     print("\nArchivos generados en el directorio 'features/'")
-    print("Ahora puedes construir los índices FAISS con build_faiss_indices.py")
 
 
 if __name__ == "__main__":

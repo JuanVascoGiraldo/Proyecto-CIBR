@@ -51,23 +51,58 @@ class BaseExtractor(ABC):
     
     def load_image(self, image: Union[str, np.ndarray, Image.Image]) -> np.ndarray:
         """
-        Carga y convierte una imagen a formato numpy array.
+        Carga y convierte una imagen a formato numpy array RGB.
+        Convierte automáticamente imágenes en escala de grises o con canal alpha.
         
         Args:
             image: Imagen en cualquier formato soportado
             
         Returns:
-            np.ndarray: Imagen como array de numpy
+            np.ndarray: Imagen como array de numpy en formato RGB
         """
         if isinstance(image, str):
             img = Image.open(image)
-            return np.array(img)
         elif isinstance(image, Image.Image):
-            return np.array(image)
+            img = image
         elif isinstance(image, np.ndarray):
-            return image
+            return self._ensure_rgb(image)
         else:
             raise ValueError(f"Formato de imagen no soportado: {type(image)}")
+        
+        # Convertir a RGB si es necesario
+        if img.mode == 'L':  # Grayscale
+            img = img.convert('RGB')
+        elif img.mode == 'RGBA':  # Con canal alpha
+            # Crear fondo blanco y pegar la imagen con alpha
+            background = Image.new('RGB', img.size, (255, 255, 255))
+            background.paste(img, mask=img.split()[3])  # Usar canal alpha como máscara
+            img = background
+        elif img.mode != 'RGB':
+            img = img.convert('RGB')
+        
+        return np.array(img)
+    
+    def _ensure_rgb(self, img_array: np.ndarray) -> np.ndarray:
+        """
+        Asegura que la imagen es RGB (3 canales).
+        
+        Args:
+            img_array: Array de numpy con la imagen
+            
+        Returns:
+            np.ndarray: Imagen en formato RGB
+        """
+        # Si es grayscale (2D o 3D con 1 canal), convertir a RGB
+        if len(img_array.shape) == 2:
+            return np.stack([img_array] * 3, axis=-1)
+        elif len(img_array.shape) == 3 and img_array.shape[2] == 1:
+            return np.concatenate([img_array] * 3, axis=-1)
+        elif len(img_array.shape) == 3 and img_array.shape[2] == 4:
+            # RGBA: quitar canal alpha y usar fondo blanco
+            rgb = img_array[:, :, :3]
+            alpha = img_array[:, :, 3:4] / 255.0
+            return (rgb * alpha + 255 * (1 - alpha)).astype(np.uint8)
+        return img_array
     
     def normalize_features(self, features: np.ndarray) -> np.ndarray:
         """

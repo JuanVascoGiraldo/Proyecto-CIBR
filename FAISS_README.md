@@ -59,7 +59,7 @@ Proyecto_CIBR/
 - Velocidad: ~0.005s por imagen
 - **Casos de uso**: Búsquedas rápidas con descriptor pequeño
 
-## 🔍 Tipos de Índices FAISS
+##  Tipos de Índices FAISS
 
 ### 1. **IndexFlatL2** (Búsqueda Exacta)
 - **Precisión**: 100% (búsqueda exacta)
@@ -100,7 +100,7 @@ Proyecto_CIBR/
 - **Tamaño promedio**: ~1-5 MB por índice
 - **Metadata**: `indices_info.json` en cada directorio
 
-## 🚀 Uso Rápido
+##  Uso Rápido
 
 ### Cargar un índice y buscar
 
@@ -167,6 +167,6 @@ index.efSearch = 64  # Más efSearch = más precisión, más lento
 3. Visualización de resultados
 4. Comparación entre diferentes combinaciones extractor+índice
 
-## 🔧 Dependencias
+##  Dependencias
 
 Ver `requirements.txt` y `requirements_extractors.txt`

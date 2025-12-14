@@ -83,6 +83,12 @@
   align-items: center;
   justify-content: center;
   overflow: hidden;
+  cursor: pointer;
+  transition: opacity 0.3s ease;
+}
+
+.result-image-container:hover {
+  opacity: 0.85;
 }
 
 .result-image-container img {
@@ -188,5 +194,134 @@
 
   .search-info {
     flex-direction: column;
+  }
+}
+
+/* Modal para vista ampliada */
+.image-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 2rem;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.modal-content {
+  background: white;
+  border-radius: 12px;
+  max-width: 90vw;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+  animation: scaleIn 0.3s ease;
+}
+
+@keyframes scaleIn {
+  from {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.modal-close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: rgba(0, 0, 0, 0.7);
+  color: white;
+  border: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  font-size: 1.5rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  transition: all 0.3s ease;
+}
+
+.modal-close:hover {
+  background: rgba(0, 0, 0, 0.9);
+  transform: rotate(90deg);
+}
+
+.modal-image {
+  width: 100%;
+  max-height: 70vh;
+  object-fit: contain;
+  background: #000;
+}
+
+.modal-info {
+  padding: 1.5rem;
+  background: white;
+}
+
+.modal-info h3 {
+  color: #2d3748;
+  margin-bottom: 1rem;
+  font-size: 1.3rem;
+  word-break: break-word;
+}
+
+.modal-info p {
+  color: #4a5568;
+  margin-bottom: 0.5rem;
+  font-size: 1rem;
+}
+
+.modal-info strong {
+  color: #2d3748;
+  margin-right: 0.5rem;
+}
+
+@media (max-width: 768px) {
+  .image-modal {
+    padding: 1rem;
+  }
+
+  .modal-content {
+    max-width: 95vw;
+    max-height: 95vh;
+  }
+
+  .modal-image {
+    max-height: 60vh;
+  }
+
+  .modal-info {
+    padding: 1rem;
+  }
+
+  .modal-info h3 {
+    font-size: 1.1rem;
+  }
+
+  .modal-info p {
+    font-size: 0.9rem;
   }
 }

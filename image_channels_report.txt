@@ -1,0 +1,58 @@
+======================================================================
+REPORTE DE CANALES DE IMAGEN
+======================================================================
+
+Total de imágenes analizadas: 960
+Imágenes con canales especiales: 13
+Imágenes RGB estándar: 947
+
+======================================================================
+IMÁGENES CON CANALES ESPECIALES
+======================================================================
+
+
+======================================================================
+MODO: P
+Descripción: Paleta de colores
+Total: 13 imágenes
+======================================================================
+
+  flute\train\0062.jpg
+    Tamaño: 162x121
+
+  flute\train\0085.jpg
+    Tamaño: 140x140
+
+  flute\train\0101.jpg
+    Tamaño: 102x140
+
+  flute\train\0102.jpg
+    Tamaño: 140x140
+
+  flute\train\0126.jpg
+    Tamaño: 140x140
+
+  flute\train\0130.jpg
+    Tamaño: 162x91
+
+  flute\train\0156.jpg
+    Tamaño: 140x140
+
+  flute\train\0161.jpg
+    Tamaño: 140x140
+
+  flute\train\0169.jpg
+    Tamaño: 162x119
+
+  guitar\test\0186.jpg
+    Tamaño: 140x140
+
+  guitar\train\0070.jpg
+    Tamaño: 134x140
+
+  saxophone\train\0090.jpg
+    Tamaño: 70x140
+
+  violin\train\0069.jpg
+    Tamaño: 162x85
+

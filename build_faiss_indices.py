@@ -59,8 +59,8 @@ class FAISSIndexBuilder:
             'uses': 'Datasets pequeños, búsqueda exacta garantizada'
         }
         
-        print(f"    ✓ Completado en {build_time:.2f}s")
-        print(f"    ✓ Vectores indexados: {index.ntotal}")
+        print(f"     Completado en {build_time:.2f}s")
+        print(f"     Vectores indexados: {index.ntotal}")
         
         return index, metadata
     
@@ -110,9 +110,9 @@ class FAISSIndexBuilder:
             'uses': 'Datasets medianos/grandes, búsqueda rápida'
         }
         
-        print(f"    ✓ Completado en {build_time:.2f}s")
-        print(f"    ✓ Vectores indexados: {index.ntotal}")
-        print(f"    ✓ Clusters: {nlist}, nprobe: {index.nprobe}")
+        print(f"     Completado en {build_time:.2f}s")
+        print(f"     Vectores indexados: {index.ntotal}")
+        print(f"     Clusters: {nlist}, nprobe: {index.nprobe}")
         
         return index, metadata
     
@@ -179,9 +179,9 @@ class FAISSIndexBuilder:
             'uses': 'Datasets grandes, memoria limitada'
         }
         
-        print(f"    ✓ Completado en {build_time:.2f}s")
-        print(f"    ✓ Vectores indexados: {index.ntotal}")
-        print(f"    ✓ Compresión: {compression_ratio:.1f}x")
+        print(f"     Completado en {build_time:.2f}s")
+        print(f"     Vectores indexados: {index.ntotal}")
+        print(f"     Compresión: {compression_ratio:.1f}x")
         
         return index, metadata
     
@@ -217,8 +217,8 @@ class FAISSIndexBuilder:
             'uses': 'Alta precisión, búsqueda muy rápida'
         }
         
-        print(f"    ✓ Completado en {build_time:.2f}s")
-        print(f"    ✓ Vectores indexados: {index.ntotal}")
+        print(f"     Completado en {build_time:.2f}s")
+        print(f"     Vectores indexados: {index.ntotal}")
         
         return index, metadata
 
@@ -248,8 +248,8 @@ def build_all_indices_for_extractor(extractor_name: str,
     print(f"\nCargando características desde {features_file}...")
     features = np.load(features_file)
     
-    print(f"  ✓ Cargadas {features.shape[0]} características")
-    print(f"  ✓ Dimensión: {features.shape[1]}")
+    print(f"   Cargadas {features.shape[0]} características")
+    print(f"   Dimensión: {features.shape[1]}")
     
     # Crear constructor
     builder = FAISSIndexBuilder(features, features.shape[1])
@@ -294,8 +294,8 @@ def build_all_indices_for_extractor(extractor_name: str,
     with open(metadata_file, 'w') as f:
         json.dump(indices_info, f, indent=2)
     
-    print(f"\n  ✓ Todos los índices creados para {extractor_name}")
-    print(f"  ✓ Metadata guardada en {metadata_file}")
+    print(f"\n   Todos los índices creados para {extractor_name}")
+    print(f"   Metadata guardada en {metadata_file}")
 
 
 def main():
@@ -329,7 +329,7 @@ def main():
     # Extraer nombres de extractores
     extractors = [f.stem.replace('_features', '') for f in feature_files]
     
-    print(f"\n✓ Encontrados {len(extractors)} extractores:")
+    print(f"\n Encontrados {len(extractors)} extractores:")
     for ext in extractors:
         print(f"  - {ext}")
     
@@ -338,7 +338,7 @@ def main():
         build_all_indices_for_extractor(extractor_name)
     
     print(f"\n{'='*60}")
-    print("✓ CONSTRUCCIÓN DE ÍNDICES COMPLETADA")
+    print(" CONSTRUCCIÓN DE ÍNDICES COMPLETADA")
     print(f"{'='*60}")
     print("\nResumen:")
     print(f"  - Extractores procesados: {len(extractors)}")
